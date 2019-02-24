@@ -1,9 +1,8 @@
 import React from 'react'
-import { StyleSheet, Text, View, Button, TouchableOpacity, SafeAreaView } from 'react-native'
+import { StyleSheet, Text, View, Button, TouchableOpacity, SafeAreaView, TextInput } from 'react-native'
 import * as Expo from 'expo'
 import { Google } from 'expo'
 import { credentials } from './secret'
-//import StoriesCamera from './StoriesCamera'
 import { Camera, Permissions }from 'expo'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -92,46 +91,7 @@ export default class App extends React.Component {
   render() {
     if(this.state.signedIn){
      return( 
-      <View style={styles.container}>
-      <Text>Welcome, {this.state.name}</Text>
-      <Text>What city do you plan to explore today?</Text>
-      
-      </View>
-     )
-    }
-    else{
-      return(
-      <LoginPage GoogleLogin = {this.GoogleLogin} FacebookLogin = {this.FacebookLogin} />
-      )
-    }
-  }
-}
-
-const LoginPage = props =>{
-  return (
-    <SafeAreaView style = {{backgroundColor:'#71226e'}}>
-    {/*<View style = {styles.LoginPage}>
-    <Text style ={styles.Title}>trueREV</Text>
-    <Text style ={styles.tagline}>Data analytics and Complex Algorithms to find the Perfect home for you</Text>
-    <Button icon={
-        <Icon
-          name="google"
-          size={25}
-          color="white"
-
-          />
-          } onPress={this.GoogleLogin} title='   Continue with Google' buttonStyle={styles.LoginButtonGoogle} />
-      <Button icon={
-          <Icon
-          name="facebook-f"
-          size={25}
-          color="white"
-
-          />
-          }onPress={this.FacebookLogin} title='   Continue with Facebook' buttonStyle={styles.LoginButtonFacebook} />
-        </View>*/}
-
-        <View style={styles.FirstPage}>
+      <View style={styles.FirstPage}>
         <TextInput 
           style={styles.CityInput}
           placeholder="enter city to search for"
@@ -145,6 +105,39 @@ const LoginPage = props =>{
           />
           }
           title="  or Get Current Location"/>  
+        </View>
+     )
+    }
+    else{
+      return(
+      <LoginPage GoogleLogin = {this.GoogleLogin} FacebookLogin = {this.FacebookLogin} />
+      )
+    }
+  }
+}
+
+const LoginPage = props =>{
+  return (
+    <SafeAreaView style = {{backgroundColor:'#71226e'}}>
+    <View style = {styles.LoginPage}>
+    <Text style ={styles.Title}>trueREV</Text>
+    <Text style ={styles.tagline}>Data Analytics and Human feedback to guide you to find the perfect home for you.</Text>
+    <Button icon={
+        <Icon
+          name="google"
+          size={25}
+          color="white"
+
+          />
+          } onPress={()=>props.GoogleLogin()} title='   Continue with Google' buttonStyle={styles.LoginButtonGoogle} />
+      <Button icon={
+          <Icon
+          name="facebook-f"
+          size={25}
+          color="white"
+
+          />
+          }onPress={()=>props.FacebookLogin()} title='   Continue with Facebook' buttonStyle={styles.LoginButtonFacebook} />
         </View>
     </SafeAreaView>
   )

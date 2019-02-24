@@ -5,6 +5,8 @@ import { Google } from 'expo'
 import { credentials } from './secret'
 //import StoriesCamera from './StoriesCamera'
 import { Camera, Permissions }from 'expo'
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 const createUserURL = 'http://52.86.115.88/truerev/user/create'
 
@@ -107,11 +109,44 @@ export default class App extends React.Component {
 
 const LoginPage = props =>{
   return (
-    <View style={styles.container}>
-    <Text>TrueRev: Visualizations, Story-based Reviews and Pure Statistics to help you find the best home</Text>
-    <Button onPress = {() => props.FacebookLogin()} title = "Continue with Facebook" />
-    <Button onPress = {() => props.GoogleLogin()} title = "Continue with Google" />
-    </View>
+    <SafeAreaView style = {{backgroundColor:'#71226e'}}>
+    {/*<View style = {styles.LoginPage}>
+    <Text style ={styles.Title}>trueREV</Text>
+    <Text style ={styles.tagline}>Data analytics and Complex Algorithms to find the Perfect home for you</Text>
+    <Button icon={
+        <Icon
+          name="google"
+          size={25}
+          color="white"
+
+          />
+          } onPress={this.GoogleLogin} title='   Continue with Google' buttonStyle={styles.LoginButtonGoogle} />
+      <Button icon={
+          <Icon
+          name="facebook-f"
+          size={25}
+          color="white"
+
+          />
+          }onPress={this.FacebookLogin} title='   Continue with Facebook' buttonStyle={styles.LoginButtonFacebook} />
+        </View>*/}
+
+        <View style={styles.FirstPage}>
+        <TextInput 
+          style={styles.CityInput}
+          placeholder="enter city to search for"
+          onChangeText={(text) => this.setState({text})}
+        />
+        <Button buttonStyle={styles.GetLocation} icon={
+        <Icon
+          name="location-arrow"
+          size={25}
+          color="white"
+          />
+          }
+          title="  or Get Current Location"/>  
+        </View>
+    </SafeAreaView>
   )
 }
 
@@ -195,4 +230,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 })
-

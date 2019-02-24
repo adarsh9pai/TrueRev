@@ -139,6 +139,22 @@ const LoginPage = props =>{
           />
           }onPress={()=>props.FacebookLogin()} title='   Continue with Facebook' buttonStyle={styles.LoginButtonFacebook} />
         </View>
+        
+        <View style={styles.FirstPage}>
+        <TextInput 
+          style={styles.CityInput}
+          placeholder="enter city to search for"
+          onChangeText={(text) => this.setState({text})}
+        />
+        <Button buttonStyle={styles.GetLocation} icon={
+        <Icon
+          name="location-arrow"
+          size={25}
+          color="white"
+          />
+          }
+          title="  or Get Current Location"/>  
+        </View>
     </SafeAreaView>
   )
 }

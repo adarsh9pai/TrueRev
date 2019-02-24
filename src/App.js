@@ -8,11 +8,16 @@ import { Button, Header } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ImagePicker from './StoriesCamera'
 import StoriesCamera from './StoriesCamera';
+import { createStackNavigator, createAppContainer } from "react-navigation"
 
 const createUserURL = 'http://52.86.115.88/truerev/user/create'
 
 
-export default class App extends React.Component {
+
+
+
+
+class App extends React.Component {
 
   postUser = (obj)=>{
     fetch(createUserURL, {
@@ -28,7 +33,7 @@ export default class App extends React.Component {
   state = {
     signedIn : false,
     email: null,
-    name: null
+    name: "James"
   }
 
   GoogleLogin = async () => {
@@ -68,6 +73,7 @@ export default class App extends React.Component {
         declinedPermissions,
       } = await Expo.Facebook.logInWithReadPermissionsAsync(credentials.facebook, {
         permissions: ['public_profile','email'],
+        behavior: "web"
       })
       if(type === "success"){
         const response = await fetch(`https://graph.facebook.com/me?fields=id,name,email,birthday&access_token=${token}`)
@@ -93,10 +99,13 @@ export default class App extends React.Component {
   render() {
     if(this.state.signedIn){
      return( 
+      <SafeAreaView style = {{backgroundColor:'#3a4660'}}>
       <View style={styles.FirstPage}>
+      <Text style ={styles.Title}>{this.state.name}</Text> 
+      <Text style = {styles.tagline}> I see you're interested in some Real Estate. What place would you like to explore?</Text>
         <TextInput 
           style={styles.CityInput}
-          placeholder="enter city to search for"
+          placeholder="Enter City/Locality/Town you're looking at"
           onChangeText={(text) => this.setState({text})}
         />
         <Button buttonStyle={styles.GetLocation} icon={
@@ -108,6 +117,7 @@ export default class App extends React.Component {
           }
           title="  or Get Current Location"/>  
         </View>
+        </SafeAreaView>
      )
     }
     else{
@@ -122,7 +132,6 @@ const LoginPage = props =>{
   return (
     <SafeAreaView style = {{backgroundColor:'#3a4660'}}>
     <View style = {styles.LoginPage}>
-    <Header containerStyle = {{backgroundColor : '#3a4660'}}/>
     <Text style ={styles.Title}>TrueRev</Text>
     <Text style ={styles.tagline}>Data Analytics and Human feedback to guide you to find the perfect home for you.</Text>
     <Button icon={
@@ -176,7 +185,7 @@ const styles = StyleSheet.create({
   FirstPage: {
     height:'100%',
     alignContent:'center',
-    backgroundColor: '#71255e',
+    backgroundColor: '#c9af98',
     opacity: 0.95,
   },
   //App title on Login page
@@ -205,7 +214,7 @@ const styles = StyleSheet.create({
     borderRadius: 70,
     width: "80%",
     height: 60,
-    backgroundColor: '#EC7357',
+    backgroundColor: '#3a4660',
     alignSelf:'center',
     top: '100%',
     alignItems: 'center',
@@ -243,3 +252,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 })
+
+
+const AppNavigator = createStackNavigator({
+  AfterLogin: App,
+
+})
+
+
+
+export default createAppContainer(AppNavigator)

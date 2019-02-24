@@ -7,9 +7,11 @@ import { Camera, Permissions }from 'expo'
 import { Button, Header } from 'react-native-elements' 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ImagePicker from './StoriesCamera'
-import StoriesCamera from './StoriesCamera';
 import { createStackNavigator, createAppContainer } from "react-navigation"
 import { Constants, Location, Platform} from 'expo'
+import StoriesCamera from './StoriesCamera'
+import CameraEmbed from './CameraEmbed'
+import CameraInterface from './CameraInterface'
 import MainPage from './MainPage'
 
 const createUserURL = 'http://52.86.115.88/truerev/user/create'
@@ -50,6 +52,17 @@ class App extends React.Component {
     let location = await Location.getCurrentPositionAsync({});
     console.log(location)
     this.setState({ location });
+  }
+
+  _setLocationAsync = async(address)=>{
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+    let location = await Location.geocodeAsync(address);
+    this.setState({location})
   }
 
   componentWillMount() {
@@ -129,7 +142,7 @@ class App extends React.Component {
         <TextInput 
           style={styles.CityInput}
           placeholder="Enter City/Locality/Town you're looking at"
-          onChangeText={(text) => this.setState({text})}
+          onChangeText={(text) => this._setLocationAsync({text})}
         />
         <Button buttonStyle={styles.GetLocation} icon={
         <Icon
@@ -139,7 +152,7 @@ class App extends React.Component {
           />
           }
           title="  or Get Current Location"
-          onPress = {() => this.props.navigation.navigate('Dashboard',{email:this.state.email, location:this.state.location, name:this.state.name})}
+          onPress = {() => this.props.navigation.navigate('StoriesCamera')}
           />  
         </ScrollView>
         </SafeAreaView>
@@ -168,22 +181,6 @@ class App extends React.Component {
       
                 />
                 }onPress={this.FacebookLogin} title='   Continue with Facebook' buttonStyle={styles.LoginButtonFacebook} />
-              </View>
-              
-              <View style={styles.FirstPage}>
-              <TextInput 
-                style={styles.CityInput}
-                placeholder="enter city to search for"
-                onChangeText={(text) => this.setState({text})}
-              />
-              <Button buttonStyle={styles.GetLocation} icon={
-              <Icon
-                name="location-arrow"
-                size={25}
-                color="white"
-                />
-                }
-                title="  or Get Current Location"/>  
               </View>
           </SafeAreaView>
         )
@@ -275,7 +272,8 @@ const styles = StyleSheet.create({
 
 const AppNavigator = createStackNavigator({
   AfterLogin: App,
-  Dashboard: MainPage
+  MainPage: MainPage,
+  StoriesCamera: StoriesCamera  
 
 })
 

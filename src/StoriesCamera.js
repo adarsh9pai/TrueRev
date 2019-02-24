@@ -1,15 +1,16 @@
-import React from 'react';
+import React from 'react'
 import { Button, Text, Header, Body, Icon, Title, Spinner } from 'native-base'
 import { Camera, Permissions, FileSystem } from 'expo'
 import { StyleSheet, View, TouchableOpacity } from 'react-native'
-import Layout from './Layout'
+import CameraInterface from './CameraInterface'
 import delay from 'delay'
 import shortid from 'shortid'
 
+
 class RedirectTo extends React.Component {
   componentDidMount() {
-    const { scene, navigation } = this.props;
-    navigation.navigate(scene);
+    const { scene, navigation } = this.props
+    navigation.navigate(scene)
   }
 
   render() {
@@ -18,17 +19,16 @@ class RedirectTo extends React.Component {
 }
 
 const printChronometer = seconds => {
-  const minutes = Math.floor(seconds / 60);
-  const remseconds = seconds % 60;
-  return '' + (minutes < 10 ? '0' : '') + minutes + ':' + (remseconds < 10 ? '0' : '') + remseconds;
+  const minutes = Math.floor(seconds / 60)
+  const remseconds = seconds % 60
+  return '' + (minutes < 10 ? '0' : '') + minutes + ':' + (remseconds < 10 ? '0' : '') + remseconds
 };
 
-export default class VideoRecorder extends React.Component {
+export default class StoriesCamera extends React.Component {
   static navigationOptions = {
     header: () => (
       <Header>
         <Body>
-          <Title>My videos</Title>
         </Body>
       </Header>
     )
@@ -40,12 +40,12 @@ export default class VideoRecorder extends React.Component {
     recording: false,
     duration: 0,
     redirect: false
-  };
+  }
 
   async componentWillMount() {
     const { status: cameraStatus } = await Permissions.askAsync(Permissions.CAMERA);
     const { status: audioStatus } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
-    this.setState({ hasCameraPermission: cameraStatus === 'granted' && audioStatus === 'granted' });
+    this.setState({ hasCameraPermission: cameraStatus === 'granted' && audioStatus === 'granted' })
   }
 
   async registerRecord() {
@@ -82,7 +82,6 @@ export default class VideoRecorder extends React.Component {
     });
 
     console.log(`${FileSystem.documentDirectory}videos/demo_${videoId}.mov`);
-    this.setState(state => ({ ...state, redirect: 'MyVideos' }));
   }
 
   async stopRecording() {
@@ -109,19 +108,19 @@ export default class VideoRecorder extends React.Component {
 
     if (hasCameraPermission === null) {
       return (
-        <Layout style={styles.containerCenter}>
+        <CameraInterface style={styles.containerCenter}>
           <Spinner />
-        </Layout>
+        </CameraInterface>
       );
     } else if (hasCameraPermission === false) {
       return (
-        <Layout style={styles.containerCenter}>
+        <CameraInterface style={styles.containerCenter}>
           <Text>No access to camera</Text>;
-        </Layout>
+        </CameraInterface>
       );
     } else {
       return (
-        <Layout style={styles.containerCenter}>
+        <CameraInterface style={styles.containerCenter}>
           <Camera
             style={styles.containerCamera}
             type={this.state.type}
@@ -156,9 +155,6 @@ export default class VideoRecorder extends React.Component {
               </Button>
             </View>
             <View style={styles.bottonActions}>
-              <Button transparent onPress={() => this.setState({ redirect: 'Home' })}>
-                <Icon ios="ios-home" android="md-home" />
-              </Button>
               <Button
                 danger
                 onPress={() => {
@@ -171,12 +167,9 @@ export default class VideoRecorder extends React.Component {
                   <Icon ios="ios-radio-button-on" android="md-radio-button-on" />
                 )}
               </Button>
-              <Button transparent onPress={() => this.setState({ redirect: 'MyVideos' })}>
-                <Icon ios="ios-folder" android="md-folder" />
-              </Button>
             </View>
           </Camera>
-        </Layout>
+        </CameraInterface>
       );
     }
   }

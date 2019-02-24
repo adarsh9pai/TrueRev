@@ -1,10 +1,11 @@
 import React from 'react'
 import { Button, Text, Header, Body, Icon, Title, Spinner } from 'native-base'
-import { Camera, Permissions, FileSystem } from 'expo'
+import { Camera, Permissions, FileSystem, Video } from 'expo'
 import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import CameraInterface from './CameraInterface'
 import delay from 'delay'
 import shortid from 'shortid'
+import { RNS3 } from 'react-native-aws3'
 
 
 class RedirectTo extends React.Component {
@@ -48,6 +49,7 @@ export default class StoriesCamera extends React.Component {
     this.setState({ hasCameraPermission: cameraStatus === 'granted' && audioStatus === 'granted' })
   }
 
+
   async registerRecord() {
     const { recording, duration } = this.state;
 
@@ -80,8 +82,29 @@ export default class StoriesCamera extends React.Component {
       from: record.uri,
       to: `${FileSystem.documentDirectory}videos/demo_${videoId}.mov`
     });
+    
+    let formData = new FormData();
+    formData.append("videoFile", {
+        name: "name.mov",
+        uri: `${FileSystem.documentDirectory}videos/demo_${videoId}.mov`,
+        type: 'video/quicktime'
+    });
+    formData.append("id", "1234567");
 
-    console.log(`${FileSystem.documentDirectory}videos/demo_${videoId}.mov`);
+    try {
+        let response = await fetch('http://52.86.115.88/truerev/video/upload', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            body: formData
+        });
+        return await response.json();
+    }
+    catch (error) {
+        console.log('error : ' + error);
+        return error;
+    }
   }
 
   async stopRecording() {

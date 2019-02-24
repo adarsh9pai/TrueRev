@@ -117,10 +117,82 @@ const LoginPage = props =>{
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
+  //Page to Login
+  LoginPage: {
+    height:'100%',
+    alignContent:'center',
+    backgroundColor: '#71255e',
+    opacity: 0.95,
+  },
+  //Page to take city input
+  FirstPage: {
+    height:'100%',
+    alignContent:'center',
+    backgroundColor: '#71255e',
+    opacity: 0.95,
+  },
+  //App title on Login page
+  Title: {
+    top: '20%',
+    fontSize : 75,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginTop: 0,
+  },
+  //Textbox to enter city name
+  CityInput:{
+    color:'#FFFFFF',
+    fontSize: 40,
+    alignContent: 'center',
+    textAlign: 'center',
+    fontWeight: '300',
+    top: '40%',
+    marginHorizontal: 8,
+    fontWeight: 'bold',
+  },
+  //Button to get user location
+  GetLocation:{
+    marginTop: 20,
+    borderRadius: 70,
+    width: "80%",
+    height: 60,
+    backgroundColor: '#EC7357',
+    alignSelf:'center',
+    top: '100%',
     alignItems: 'center',
-    justifyContent: 'center'
+  },
+  //Subtitle in Login page
+  tagline:{
+    color:'#FFFFFF',
+    fontSize: 20,
+    alignContent: 'center',
+    textAlign: 'center',
+    fontWeight: '300',
+    top: '20%',
+    marginHorizontal: 20,
+  },
+  //Login button for google
+  LoginButtonGoogle: {
+    marginTop: 20,
+    borderRadius: 70,
+    width: "80%",
+    height: 60,
+    backgroundColor: '#d34836',
+    alignSelf:'center',    
+    top: '120%',
+    alignItems: 'center',
+  },
+  //Login button for facebook  
+  LoginButtonFacebook:  {
+    marginTop: 20,
+    borderRadius: 70,
+    width: "80%",
+    height: 60,
+    backgroundColor: '#3B5998',
+    alignSelf:'center',
+    top: '80%',
+    alignItems: 'center',
   },
 })
+

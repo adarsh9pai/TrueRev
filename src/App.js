@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Button, TouchableOpacity, SafeAreaView } from 'react-native'
 import * as Expo from 'expo'
 import { Google } from 'expo'
 import { credentials } from './secret'
@@ -24,7 +24,8 @@ export default class App extends React.Component {
 
   state = {
     signedIn : false,
-    email: null
+    email: null,
+    name: null
   }
 
   GoogleLogin = async () => {
@@ -39,7 +40,8 @@ export default class App extends React.Component {
       if (result.type === "success") {
         this.setState({
           email: result.user.email,
-          signedIn : true
+          signedIn : true,
+          name: result.user.name
         })
         this.postUser({
           email: result.user.email,
@@ -70,7 +72,8 @@ export default class App extends React.Component {
         console.log(responseJson)
         this.setState({
           email: responseJson.email,
-          signedIn : true
+          signedIn : true,
+          name: responseJson.name
         })
         this.postUser({
           email: responseJson.email,
@@ -87,7 +90,11 @@ export default class App extends React.Component {
   render() {
     if(this.state.signedIn){
      return( 
-     <Text>Hello</Text> 
+      <View style={styles.container}>
+      <Text>Welcome, {this.state.name}</Text>
+      <Text>What city do you plan to explore today?</Text>
+      
+      </View>
      )
     }
     else{
@@ -114,6 +121,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
 })

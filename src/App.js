@@ -1,11 +1,13 @@
 import React from 'react'
-import { StyleSheet, Text, View, Button, TouchableOpacity, SafeAreaView, TextInput } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Dimensions } from 'react-native'
 import * as Expo from 'expo'
 import { Google } from 'expo'
 import { credentials } from './secret'
 import { Camera, Permissions }from 'expo'
+import { Button, Header } from 'react-native-elements' 
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import ImagePicker from './StoriesCamera'
+import StoriesCamera from './StoriesCamera';
 
 const createUserURL = 'http://52.86.115.88/truerev/user/create'
 
@@ -110,7 +112,7 @@ export default class App extends React.Component {
     }
     else{
       return(
-      <LoginPage GoogleLogin = {this.GoogleLogin} FacebookLogin = {this.FacebookLogin} />
+      <LoginPage GoogleLogin = {this.GoogleLogin} FacebookLogin = {this.FacebookLogin} />   
       )
     }
   }
@@ -118,9 +120,10 @@ export default class App extends React.Component {
 
 const LoginPage = props =>{
   return (
-    <SafeAreaView style = {{backgroundColor:'#71226e'}}>
+    <SafeAreaView style = {{backgroundColor:'#3a4660'}}>
     <View style = {styles.LoginPage}>
-    <Text style ={styles.Title}>trueREV</Text>
+    <Header containerStyle = {{backgroundColor : '#3a4660'}}/>
+    <Text style ={styles.Title}>TrueRev</Text>
     <Text style ={styles.tagline}>Data Analytics and Human feedback to guide you to find the perfect home for you.</Text>
     <Button icon={
         <Icon
@@ -159,13 +162,14 @@ const LoginPage = props =>{
   )
 }
 
+let {height, weight} = Dimensions.get("screen")
 
 const styles = StyleSheet.create({
   //Page to Login
   LoginPage: {
     height:'100%',
     alignContent:'center',
-    backgroundColor: '#71255e',
+    backgroundColor: '#c9af98',
     opacity: 0.95,
   },
   //Page to take city input
@@ -177,9 +181,9 @@ const styles = StyleSheet.create({
   },
   //App title on Login page
   Title: {
-    top: '20%',
+    top: 40,
     fontSize : 75,
-    color: '#FFFFFF',
+    color: '#3a4660',
     textAlign: 'center',
     fontWeight: 'bold',
     marginTop: 0,
@@ -212,8 +216,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignContent: 'center',
     textAlign: 'center',
-    fontWeight: '300',
-    top: '20%',
+    fontWeight: '500',
+    top: height/6,
     marginHorizontal: 20,
   },
   //Login button for google
@@ -224,7 +228,7 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: '#d34836',
     alignSelf:'center',    
-    top: '120%',
+    top: height/5,
     alignItems: 'center',
   },
   //Login button for facebook  
@@ -235,7 +239,7 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: '#3B5998',
     alignSelf:'center',
-    top: '80%',
+    top: height/5,
     alignItems: 'center',
   },
 })

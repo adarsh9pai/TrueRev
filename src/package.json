@@ -10,11 +10,14 @@
   },
   "dependencies": {
     "aws-sdk": "^2.409.0",
+    "delay": "^4.1.0",
     "expo": "^31.0.2",
+    "native-base": "^2.12.0",
     "qs": "^6.6.0",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
-    "react-native-elements": "^1.0.0"
+    "react-native-elements": "^1.0.0",
+    "shortid": "^2.2.14"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0"

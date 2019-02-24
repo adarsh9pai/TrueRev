@@ -1,12 +1,26 @@
 import React from 'react'
-import { StyleSheet, Text, View, Button } from 'react-native'
+import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native'
 import * as Expo from 'expo'
 import { Google } from 'expo'
 import { credentials } from './secret'
+//import StoriesCamera from './StoriesCamera'
+import { Camera, Permissions }from 'expo'
 
+const createUserURL = 'http://52.86.115.88/truerev/user/create'
 
 
 export default class App extends React.Component {
+
+  postUser = (obj)=>{
+    fetch(createUserURL, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(obj),
+    });
+  }
 
   state = {
     signedIn : false,
@@ -26,6 +40,10 @@ export default class App extends React.Component {
         this.setState({
           email: result.user.email,
           signedIn : true
+        })
+        this.postUser({
+          email: result.user.email,
+          name: result.user.name
         })
       } else {
         console.log("cancelled");
@@ -51,7 +69,12 @@ export default class App extends React.Component {
         const responseJson = await response.json()
         console.log(responseJson)
         this.setState({
-          email: responseJson.email
+          email: responseJson.email,
+          signedIn : true
+        })
+        this.postUser({
+          email: responseJson.email,
+          name: responseJson.name
         })
       }
 
@@ -62,15 +85,29 @@ export default class App extends React.Component {
   }
 
   render() {
-    return (
-      <View style={styles.container}>
-      <Text>TrueRev: Visualizations, Story-based Reviews and Pure Statistics to help you find the best home</Text>
-      <Button onPress = {this.FacebookLogin} title = "Continue with Facebook" />
-      <Button onPress = {this.GoogleLogin} title = "Continue with Google" />
-      </View>
-    )
+    if(this.state.signedIn){
+     return( 
+     <Text>Hello</Text> 
+     )
+    }
+    else{
+      return(
+      <LoginPage GoogleLogin = {this.GoogleLogin} FacebookLogin = {this.FacebookLogin} />
+      )
+    }
   }
 }
+
+const LoginPage = props =>{
+  return (
+    <View style={styles.container}>
+    <Text>TrueRev: Visualizations, Story-based Reviews and Pure Statistics to help you find the best home</Text>
+    <Button onPress = {() => props.FacebookLogin()} title = "Continue with Facebook" />
+    <Button onPress = {() => props.GoogleLogin()} title = "Continue with Google" />
+    </View>
+  )
+}
+
 
 const styles = StyleSheet.create({
   container: {

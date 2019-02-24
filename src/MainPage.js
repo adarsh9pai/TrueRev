@@ -1,29 +1,33 @@
 import React from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Dimensions, ScrollView } from 'react-native'
+import { Constants, Location, Permissions } from 'expo'
 
 class MainPage extends React.Component{
   state = {
     zipcode:null,
     state: null,
     latitude: null,
-    longitude: null
+    longitude: null,
+    code:  'AIzaSyCrocPk4wsWjNUBgS0zU3UqS5TDGcWYbl8'
   }
 
   
 
-  fetchData = async()=>{
-
-  }
-
 render(){
     const { navigation } = this.props
-    const location = navigation.getParam('location', '')
-
+    const lat = navigation.getParam('lat','NaN')
+    const lng = navigation.getParam('lng','NaN')
+    this.setState({
+      latitude : lat,
+      longitude : lng
+    })
+    
+  
 
 
     return(
         <SafeAreaView>
-            <Text>{location.accuracy}</Text>
+            <Text>{this.state.latitude}</Text>
         </SafeAreaView>
     )
 }

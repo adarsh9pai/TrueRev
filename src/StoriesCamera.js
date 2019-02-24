@@ -85,8 +85,8 @@ export default class StoriesCamera extends React.Component {
     
     let formData = new FormData();
     formData.append("videoFile", {
-        name: "name.mov",
-        uri: `${FileSystem.documentDirectory}videos/demo_${videoId}.mov`,
+        filename: "name.mov",
+        testfile: `${FileSystem.documentDirectory}videos/demo_${videoId}.mov`,
         type: 'video/quicktime'
     });
     formData.append("id", "1234567");

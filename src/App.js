@@ -152,7 +152,10 @@ class App extends React.Component {
           />
           }
           title="  or Get Current Location"
-          onPress = {() => this.props.navigation.navigate('StoriesCamera')}
+          onPress = {() => this.props.navigation.navigate('MainPage',{
+            lat : this.state.location.coords.latitude,
+            lng: this.state.location.coords.longirude
+          })}
           />  
         </ScrollView>
         </SafeAreaView>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, TextInput, Dimensions, ScrollView } from 'react-native'
 import * as Expo from 'expo'
 import { Google } from 'expo'
 import { credentials } from './secret'
@@ -9,6 +9,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import ImagePicker from './StoriesCamera'
 import StoriesCamera from './StoriesCamera';
 import { createStackNavigator, createAppContainer } from "react-navigation"
+import { Constants, Location, Platform} from 'expo'
+import MainPage from './MainPage'
 
 const createUserURL = 'http://52.86.115.88/truerev/user/create'
 
@@ -33,8 +35,28 @@ class App extends React.Component {
   state = {
     signedIn : false,
     email: null,
-    name: "James"
+    name: "NaN",
+    text: null,
+    location: null
   }
+
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    console.log(location)
+    this.setState({ location });
+  }
+
+  componentWillMount() {
+    
+    this._getLocationAsync();
+  }
+
 
   GoogleLogin = async () => {
     try {
@@ -73,7 +95,8 @@ class App extends React.Component {
         declinedPermissions,
       } = await Expo.Facebook.logInWithReadPermissionsAsync(credentials.facebook, {
         permissions: ['public_profile','email'],
-        behavior: "web"
+        behavior: 'native'
+        
       })
       if(type === "success"){
         const response = await fetch(`https://graph.facebook.com/me?fields=id,name,email,birthday&access_token=${token}`)
@@ -100,7 +123,7 @@ class App extends React.Component {
     if(this.state.signedIn){
      return( 
       <SafeAreaView style = {{backgroundColor:'#3a4660'}}>
-      <View style={styles.FirstPage}>
+      <ScrollView style={styles.FirstPage}>
       <Text style ={styles.Title}>{this.state.name}</Text> 
       <Text style = {styles.tagline}> I see you're interested in some Real Estate. What place would you like to explore?</Text>
         <TextInput 
@@ -115,60 +138,57 @@ class App extends React.Component {
           color="white"
           />
           }
-          title="  or Get Current Location"/>  
-        </View>
+          title="  or Get Current Location"
+          onPress = {() => this.props.navigation.navigate('Dashboard',{email:this.state.email, location:this.state.location, name:this.state.name})}
+          />  
+        </ScrollView>
         </SafeAreaView>
      )
     }
     else{
       return(
-      <LoginPage GoogleLogin = {this.GoogleLogin} FacebookLogin = {this.FacebookLogin} />   
-      )
+
+          <SafeAreaView style = {{backgroundColor:'#3a4660'}}>
+          <View style = {styles.LoginPage}>
+          <Text style ={styles.Title}>TrueRev</Text>
+          <Text style ={styles.tagline}>Data Analytics and Human feedback to guide you to find the perfect home for you.</Text>
+          <Button icon={
+              <Icon
+                name="google"
+                size={25}
+                color="white"
+      
+                />
+                } onPress={this.GoogleLogin} title='   Continue with Google' buttonStyle={styles.LoginButtonGoogle} />
+            <Button icon={
+                <Icon
+                name="facebook-f"
+                size={25}
+                color="white"
+      
+                />
+                }onPress={this.FacebookLogin} title='   Continue with Facebook' buttonStyle={styles.LoginButtonFacebook} />
+              </View>
+              
+              <View style={styles.FirstPage}>
+              <TextInput 
+                style={styles.CityInput}
+                placeholder="enter city to search for"
+                onChangeText={(text) => this.setState({text})}
+              />
+              <Button buttonStyle={styles.GetLocation} icon={
+              <Icon
+                name="location-arrow"
+                size={25}
+                color="white"
+                />
+                }
+                title="  or Get Current Location"/>  
+              </View>
+          </SafeAreaView>
+        )
     }
   }
-}
-
-const LoginPage = props =>{
-  return (
-    <SafeAreaView style = {{backgroundColor:'#3a4660'}}>
-    <View style = {styles.LoginPage}>
-    <Text style ={styles.Title}>TrueRev</Text>
-    <Text style ={styles.tagline}>Data Analytics and Human feedback to guide you to find the perfect home for you.</Text>
-    <Button icon={
-        <Icon
-          name="google"
-          size={25}
-          color="white"
-
-          />
-          } onPress={()=>props.GoogleLogin()} title='   Continue with Google' buttonStyle={styles.LoginButtonGoogle} />
-      <Button icon={
-          <Icon
-          name="facebook-f"
-          size={25}
-          color="white"
-
-          />
-          }onPress={()=>props.FacebookLogin()} title='   Continue with Facebook' buttonStyle={styles.LoginButtonFacebook} />
-        </View>
-        
-        <View style={styles.FirstPage}>
-        <TextInput 
-          style={styles.CityInput}
-          placeholder="enter city to search for"
-          onChangeText={(text) => this.setState({text})}
-        />
-        <Button buttonStyle={styles.GetLocation} icon={
-        <Icon
-          name="location-arrow"
-          size={25}
-          color="white"
-          />
-          }
-          title="  or Get Current Location"/>  
-        </View>
-    </SafeAreaView>
-  )
 }
 
 let {height, weight} = Dimensions.get("screen")
@@ -200,23 +220,23 @@ const styles = StyleSheet.create({
   //Textbox to enter city name
   CityInput:{
     color:'#FFFFFF',
-    fontSize: 40,
+    fontSize: 30,
     alignContent: 'center',
     textAlign: 'center',
     fontWeight: '300',
-    top: '40%',
+    top: '45%',
     marginHorizontal: 8,
     fontWeight: 'bold',
   },
   //Button to get user location
   GetLocation:{
-    marginTop: 20,
+    marginTop: 5,
     borderRadius: 70,
     width: "80%",
     height: 60,
     backgroundColor: '#3a4660',
     alignSelf:'center',
-    top: '100%',
+    top: height/5,
     alignItems: 'center',
   },
   //Subtitle in Login page
@@ -253,9 +273,9 @@ const styles = StyleSheet.create({
   },
 })
 
-
 const AppNavigator = createStackNavigator({
   AfterLogin: App,
+  Dashboard: MainPage
 
 })
 
